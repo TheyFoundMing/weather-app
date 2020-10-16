@@ -4,6 +4,8 @@ import Navbar from "react-bootstrap/Navbar";
 
 import "./App.scss";
 
+import Day from "./components/Day";
+
 class App extends React.Component {
   constructor() {
     super();
@@ -15,12 +17,13 @@ class App extends React.Component {
       city: "Pick a City",
       country: "",
       time: 3,
+      data: {},
       days: {},
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleScale = this.handleScale.bind(this);
     this.fetchData = this.fetchData.bind(this);
+    this.sortDays = this.sortDays.bind(this);
   }
 
   handleChange(e) {
@@ -28,11 +31,7 @@ class App extends React.Component {
     this.setState({ [name]: value });
   }
 
-  handleScale(e) {}
-
   async fetchData() {
-    console.log(this.state.formCity);
-
     try {
       let data = await fetch(
         `https://api.openweathermap.org/data/2.5/forecast?q=${this.state.formCity}&appid=db50792fc0c680e4b599a799cb13c9fb`,
@@ -46,14 +45,40 @@ class App extends React.Component {
         city: dataJSON.city.name,
         country: dataJSON.city.country,
       });
+
+      this.sortDays(dataJSON.list);
     } catch (err) {
-      //   console.log(err);
+      console.log(err);
     }
   }
 
-  sortDays() {}
+  sortDays(dataList) {
+    let currentDate = new Date(dataList[0]["dt_txt"]).getDate();
+    let days = {};
+
+    for (let i = currentDate; i < currentDate + 5; i++) {
+      days[i] = [];
+    }
+
+    for (let i = 0; i < dataList.length; i++) {
+      let date = new Date(dataList[i]["dt_txt"]).getDate();
+
+      if (date >= currentDate + 5) break;
+
+      days[date].push(dataList[i]);
+    }
+
+    this.setState({ days });
+  }
 
   render() {
+    let days = [];
+    let c = 0;
+
+    for (const day in this.state.days) {
+      days.push(<Day key={c++} data={day} />);
+    }
+
     return (
       <div>
         <Navbar>
@@ -90,6 +115,8 @@ class App extends React.Component {
           value={this.state.time}
           onChange={this.handleChange}
         />
+
+        <div className="shelf">{days}</div>
       </div>
     );
   }
