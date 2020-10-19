@@ -16,8 +16,6 @@ class App extends React.Component {
 
       city: "Pick a City",
       country: "",
-      time: 3,
-      data: {},
       days: {},
     };
 
@@ -46,6 +44,8 @@ class App extends React.Component {
         country: dataJSON.city.country,
       });
 
+      this.setState({ days: {} });
+
       this.sortDays(dataJSON.list);
     } catch (err) {
       console.log(err);
@@ -73,10 +73,11 @@ class App extends React.Component {
 
   render() {
     let days = [];
-    let c = 0;
 
-    for (const day in this.state.days) {
-      days.push(<Day key={c++} data={day} />);
+    for (let i = 0; i < Object.keys(this.state.days).length; i++) {
+      days.push(
+        <Day key={i} data={this.state.days[Object.keys(this.state.days)[i]]} />
+      );
     }
 
     return (
@@ -99,22 +100,12 @@ class App extends React.Component {
           </div>
         </Navbar>
 
-        <h1>
-          {this.state.city}
-          {this.state.country ? `, ${this.state.country}` : ""}
-        </h1>
-
-        <h1>{this.state.time}</h1>
-
-        <input
-          type="range"
-          name="time"
-          min="3"
-          max="24"
-          step="3"
-          value={this.state.time}
-          onChange={this.handleChange}
-        />
+        <div className="city">
+          <h1>
+            {this.state.city}
+            {this.state.country ? `, ${this.state.country}` : ""}
+          </h1>
+        </div>
 
         <div className="shelf">{days}</div>
       </div>
