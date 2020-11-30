@@ -20,48 +20,51 @@ class Day extends React.Component {
     };
   }
 
+  pickImage(weatherID) {
+    switch (true) {
+      case weatherID >= 801:
+        return clouds;
+
+      case weatherID === 800:
+        return clear;
+
+      case weatherID >= 700:
+        return atmosphere;
+
+      case weatherID >= 600:
+        return snow;
+
+      case weatherID >= 500:
+        return rainy;
+
+      case weatherID >= 300:
+        return drizzle;
+
+      default:
+        return thunder;
+    }
+  }
+
   render() {
     let currentDate = new Date(this.state.currentTime.dt_txt);
     let weatherID = this.state.currentTime.weather[0]["id"];
-    let weatherImg;
-    // console.log(currentDate.getDay());
+    let weatherImg = this.pickImage(weatherID);
 
-    switch (true) {
-      case weatherID >= 801:
-        weatherImg = clouds;
-        break;
-
-      case weatherID === 800:
-        weatherImg = clear;
-        break;
-
-      case weatherID >= 700:
-        weatherImg = atmosphere;
-        break;
-
-      case weatherID >= 600:
-        weatherImg = snow;
-        break;
-
-      case weatherID >= 500:
-        weatherImg = rainy;
-        break;
-
-      case weatherID >= 300:
-        weatherImg = drizzle;
-        break;
-
-      default:
-        weatherImg = thunder;
-        break;
-    }
+    let weekDays = {
+      0: "Sunday",
+      1: "Monday",
+      2: "Tuesday",
+      3: "Wednesday",
+      4: "Thursday",
+      5: "Friday",
+      6: "Saturday",
+    };
 
     return (
       <div className="day">
         <div className="status">
           <span>
-            {currentDate.getDate()}/{currentDate.getMonth()}/
-            {currentDate.getFullYear()}
+            {this.props.firstDay ? "Today" : weekDays[currentDate.getDay()]}
           </span>
           {this.state.currentTime.weather[0]["description"]}
         </div>
@@ -69,11 +72,9 @@ class Day extends React.Component {
         <img src={weatherImg} alt="" />
 
         <div className="details">
-          <span>Temperature: {this.state.currentTime.main["temp"]}</span>
-          <span>Feels like: {this.state.currentTime.main["feels_like"]}</span>
+          <span>{this.state.currentTime.main["temp"]}</span>
           <span>Max: {this.state.currentTime.main["temp_max"]}</span>
           <span>Min: {this.state.currentTime.main["temp_min"]}</span>
-          <span>Humidity: {this.state.currentTime.main["humidity"]}</span>
         </div>
       </div>
     );
