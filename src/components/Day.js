@@ -63,18 +63,26 @@ class Day extends React.Component {
     return (
       <div className="day">
         <div className="status">
-          <span>
+          <h1>
             {this.props.firstDay ? "Today" : weekDays[currentDate.getDay()]}
-          </span>
+          </h1>
           {this.state.currentTime.weather[0]["description"]}
         </div>
 
         <img src={weatherImg} alt="" />
 
         <div className="details">
-          <span>{this.state.currentTime.main["temp"]}</span>
-          <span>Max: {this.state.currentTime.main["temp_max"]}</span>
-          <span>Min: {this.state.currentTime.main["temp_min"]}</span>
+          <span className="temp">
+            {Math.round(this.state.currentTime.main["temp"])}&#176;C
+          </span>
+          <div className="minmax">
+            <span>
+              {Math.round(this.state.currentTime.main["temp_max"])}&#176;
+            </span>
+            <span>
+              {Math.round(this.state.currentTime.main["temp_min"])}&#176;
+            </span>
+          </div>
         </div>
       </div>
     );
