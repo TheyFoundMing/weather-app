@@ -69,6 +69,7 @@ class App extends React.Component {
     }
   }
 
+  // doesn't work because it doesn't cover the ends of the month
   sortDays(dataList) {
     let currentDate = new Date(dataList[0]["dt_txt"]).getDate();
     let days = {};
@@ -98,9 +99,23 @@ class App extends React.Component {
     let days = [];
 
     for (let i = 0; i < Object.keys(this.state.days).length; i++) {
-      days.push(
-        <Day key={i} data={this.state.days[Object.keys(this.state.days)[i]]} />
-      );
+      if (i === 0) {
+        days.push(
+          <Day
+            key={i}
+            data={this.state.days[Object.keys(this.state.days)[i]]}
+            firstDay={true}
+          />
+        );
+      } else {
+        days.push(
+          <Day
+            key={i}
+            data={this.state.days[Object.keys(this.state.days)[i]]}
+            firstDay={false}
+          />
+        );
+      }
     }
 
     return (
@@ -109,33 +124,12 @@ class App extends React.Component {
           <span className="brand">5 Days</span>
 
           <div className="search">
-            <input
-              type="text"
-              placeholder="Search city"
-              name="formCity"
-              value={this.state.formCity}
-              onChange={this.handleChange}
-              onKeyDown={this.search}
-            />
-
-            <img
-              src={searchImage}
-              alt="Search"
-              onClick={this.fetchData}
-              className="search"
-            />
-
             <a href="https://github.com/TheyFoundMing">
               <img src={githubImage} alt="GitHub" />
             </a>
             <a href="https://www.linkedin.com/in/michaella-magtibay-7851421b2/">
               <img src={linkedinImage} alt="LinkedIn" />
             </a>
-
-            <label className="switch">
-              <input type="checkbox" onClick={this.changeTemp} />
-              <span className="slider round"></span>
-            </label>
           </div>
         </div>
 
@@ -144,6 +138,14 @@ class App extends React.Component {
             {this.state.city}
             {this.state.country ? `, ${this.state.country}` : ""}
           </h1>
+          <input
+            type="text"
+            placeholder="Search city"
+            name="formCity"
+            value={this.state.formCity}
+            onChange={this.handleChange}
+            onKeyDown={this.search}
+          />
         </div>
 
         <div className="shelf">{days}</div>
