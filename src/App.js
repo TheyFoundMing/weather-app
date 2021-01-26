@@ -4,7 +4,7 @@ import Day from "./components/Day";
 
 import githubImage from "./img/github.png";
 import linkedinImage from "./img/linkedin.png";
-import searchImage from "./img/search.png";
+// import searchImage from "./img/search.png";
 
 import "./App.scss";
 
